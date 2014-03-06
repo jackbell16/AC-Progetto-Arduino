@@ -9,8 +9,8 @@ AUTORE GIACOMO BELLAZZI
 #include <WebServer.h> 
 #include <avr/pgmspace.h>
 #define pinWarm 22
-#define pinOFF 26
-#define pinCold 24
+#define pinOFF 24
+#define pinCold 26
 
 
 static byte mac_Add[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
