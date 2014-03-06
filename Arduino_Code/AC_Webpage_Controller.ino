@@ -8,13 +8,15 @@ AUTORE GIACOMO BELLAZZI
 #include <SPI.h>
 #include <WebServer.h> 
 #include <avr/pgmspace.h>
+#define pinWarm 22
+#define pinOFF 26
+#define pinCold 24
 
 
 static byte mac_Add[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 WebServer webserver("", 80);
 // Questa stringhe, permetterà di capire lo stato del condizionatore, sulla pagina web
 String state = "off"; 
-
 
 
 void Start(WebServer &server, WebServer::ConnectionType type,
@@ -24,28 +26,27 @@ void Start(WebServer &server, WebServer::ConnectionType type,
   if (type != WebServer::HEAD)
   {
     String s = "";
- 
-     if (param_complete == true)
+    if (param_complete == true)
       {
       s = url_param;
       if ( s == "cold")
       {
         Serial.println("cold");
         state = "cold";
-        sendPWMtoArduino(24);
+        sendPWMtoArduino(pinCold);
       }
       if ( s == "warm")
       {
         Serial.println("warm");
         state = "warm";
-        sendPWMtoArduino(22);
+        sendPWMtoArduino(pinWarm);
        }
      
      if ( s == "off")
       {
         Serial.println("off");
         state = "off";
-        sendPWMtoArduino(26);
+        sendPWMtoArduino(pinOFF);
       }
      }
     // web page
@@ -70,12 +71,12 @@ void Start(WebServer &server, WebServer::ConnectionType type,
 
  void setup()
 {
-  digitalWrite(22,LOW);
-  digitalWrite(24,LOW);
-  digitalWrite(26,LOW);
-  pinMode(22,OUTPUT);
-  pinMode(24,OUTPUT);
-  pinMode(26,OUTPUT);
+  digitalWrite(pinWarm,LOW);
+  digitalWrite(pinOFF,LOW);
+  digitalWrite(pinCold,LOW);
+  pinMode(pinWarm,OUTPUT);
+  pinMode(pinOFF,OUTPUT);
+  pinMode(pinCold,OUTPUT);
   Ethernet.begin(mac_Add);
   webserver.setDefaultCommand(&Start);
   webserver.addCommand("index.htm", &Start);
